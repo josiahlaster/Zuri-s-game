@@ -1,12 +1,13 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Area.gd" type="Script" id=1]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://tileYellow_06.png" type="Texture" id=3]
 [ext_resource path="res://tileYellow_07.png" type="Texture" id=4]
 [ext_resource path="res://tileYellow_05.png" type="Texture" id=5]
-[ext_resource path="res://cookie.tscn" type="PackedScene" id=6]
-[ext_resource path="res://spawner.gd" type="Script" id=7]
+[ext_resource path="res://Font.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://ground.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Score.gd" type="Script" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
@@ -127,6 +128,11 @@ points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
 } ]
 2/z_index = 0
 
+[sub_resource type="DynamicFont" id=10]
+size = 128
+use_filter = true
+font_data = ExtResource( 6 )
+
 [node name="Area" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -134,22 +140,34 @@ script = ExtResource( 1 )
 position = Vector2( 197, 135 )
 
 [node name="TileMap" type="TileMap" parent="."]
-position = Vector2( 59, 7 )
 tile_set = SubResource( 4 )
 format = 1
 tile_data = PoolIntArray( 0, -1073741823, 0, 9, -1610612735, 0, 65536, -1073741823, 0, 65545, -1610612735, 0, 131072, -1073741823, 0, 131081, -1610612735, 0, 196608, -1073741823, 0, 196617, -1610612735, 0, 262144, -1073741823, 0, 262153, -1610612735, 0, 327680, 1610612736, 0, 327681, 1610612737, 0, 327682, 1610612737, 0, 327683, 1610612737, 0, 327684, 1610612737, 0, 327685, 1610612737, 0, 327686, 1610612737, 0, 327687, 1610612737, 0, 327688, 1610612737, 0, 327689, 1610612738, 0 )
 
-[node name="spawner" type="Node2D" parent="."]
-position = Vector2( 270, -92 )
-script = ExtResource( 7 )
+[node name="Node2D" type="Node2D" parent="."]
 
-[node name="cookie_spawn_timer" type="Timer" parent="spawner"]
+[node name="Control" type="Control" parent="Node2D"]
+margin_right = 640.0
+margin_bottom = 360.0
+
+[node name="Score" type="Label" parent="Node2D/Control"]
+margin_left = 71.0
+margin_top = 1.0
+margin_right = 1076.0
+margin_bottom = 146.0
+rect_scale = Vector2( 0.5, 0.5 )
+custom_fonts/font = SubResource( 10 )
+text = "100"
+align = 1
+valign = 1
+script = ExtResource( 9 )
+
+[node name="cookie_spawn_timer" type="Timer" parent="."]
 wait_time = 0.25
 autostart = true
 
-[node name="cookie" parent="." instance=ExtResource( 6 )]
-position = Vector2( 119, 27 )
-script = ExtResource( 7 )
+[node name="ground" parent="." instance=ExtResource( 8 )]
+position = Vector2( 325, 332 )
+scale = Vector2( 9.5, 0.28125 )
 
-[connection signal="timeout" from="spawner/cookie_spawn_timer" to="." method="_on_cookie_spawn_timer_timeout"]
-[connection signal="timeout" from="spawner/cookie_spawn_timer" to="spawner" method="_on_cookie_spawn_timer_timeout"]
+[connection signal="timeout" from="cookie_spawn_timer" to="." method="_on_cookie_spawn_timer_timeout"]
